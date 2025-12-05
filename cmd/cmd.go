@@ -10,7 +10,7 @@ func Execute() error {
 	course := goals.GetCourse()
 	projects := goals.GetProjects()
 	weeks := goals.GetWeeks()
-	hours := goals.GetHours()
+	hours, _ := goals.GetHours()
 	books := goals.GetRead()
 
 	p := terminal.Programming(course, projects)
