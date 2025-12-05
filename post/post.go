@@ -1,10 +1,10 @@
 package post
 
 type Terminals struct {
-	Programming []byte
-	Fitness     []byte
-	Spanish     []byte
-	Reading     []byte
+	Programming string
+	Fitness     string
+	Spanish     string
+	Reading     string
 }
 
 func Write(terminals Terminals, filePath string) error {
