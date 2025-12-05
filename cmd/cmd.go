@@ -9,8 +9,9 @@ import (
 func Execute() error {
 	course := goals.GetCourse()
 	projects := goals.GetProjects()
-	weeks := goals.GetWeeks()
+	weeks, _ := goals.GetWeeks()
 	hours, _ := goals.GetHours()
+
 	books := goals.GetRead()
 
 	p := terminal.Programming(course, projects)

@@ -8,7 +8,7 @@ func Programming(course goals.Course, projects []goals.Project) []byte {
 	return []byte{}
 }
 
-func Fitness(weeks []string) []byte {
+func Fitness(weeks goals.FitnessWeeks) []byte {
 	return []byte{}
 }
 
