@@ -7,12 +7,30 @@ import (
 )
 
 func Execute() error {
-	course, _ := goals.GetCourse()
-	projects, _ := goals.GetProjects()
-	weeks, _ := goals.GetWeeks()
-	hours, _ := goals.GetHours()
+	course, err := goals.GetCourse()
+	if err != nil {
+		return err
+	}
 
-	books := goals.GetRead()
+	projects, err := goals.GetProjects()
+	if err != nil {
+		return err
+	}
+
+	weeks, err := goals.GetWeeks()
+	if err != nil {
+		return err
+	}
+
+	hours, err := goals.GetHours()
+	if err != nil {
+		return err
+	}
+
+	books, err := goals.GetRead()
+	if err != nil {
+		return err
+	}
 
 	p := terminal.Programming(course, projects)
 	f := terminal.Fitness(weeks)
