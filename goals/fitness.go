@@ -10,7 +10,7 @@ type FitnessWeeks struct {
 	Missed  []int `json:"missed"`
 }
 
-const FITNESS_FILE = "fitness.json"
+const FITNESS_FILE = "data/fitness.json"
 
 func GetWeeks() (FitnessWeeks, error) {
 	f, err := os.ReadFile(FITNESS_FILE)

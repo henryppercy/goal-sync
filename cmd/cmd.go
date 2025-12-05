@@ -7,8 +7,8 @@ import (
 )
 
 func Execute() error {
-	course := goals.GetCourse()
-	projects := goals.GetProjects()
+	course, _ := goals.GetCourse()
+	projects, _ := goals.GetProjects()
 	weeks, _ := goals.GetWeeks()
 	hours, _ := goals.GetHours()
 
