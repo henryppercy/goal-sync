@@ -1,12 +1,9 @@
 package goals
 
 import (
-	_ "embed"
 	"encoding/json"
+	"os"
 )
-
-//go:embed data/fitness.json
-var fitnessJSON []byte
 
 type FitnessWeeks struct {
 	Trained []int `json:"trained"`
@@ -14,8 +11,13 @@ type FitnessWeeks struct {
 }
 
 func GetWeeks() (FitnessWeeks, error) {
+	data, err := os.ReadFile("data/fitness.json")
+	if err != nil {
+		return FitnessWeeks{}, err
+	}
+
 	var fitness FitnessWeeks
-	err := json.Unmarshal(fitnessJSON, &fitness)
+	err = json.Unmarshal(data, &fitness)
 	if err != nil {
 		return FitnessWeeks{}, err
 	}

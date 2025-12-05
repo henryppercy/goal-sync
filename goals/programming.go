@@ -1,15 +1,9 @@
 package goals
 
 import (
-	_ "embed"
 	"encoding/json"
+	"os"
 )
-
-//go:embed data/course.json
-var courseJSON []byte
-
-//go:embed data/projects.json
-var projectsJSON []byte
 
 type Course struct {
 	Name   string `json:"name"`
@@ -23,8 +17,13 @@ type Project struct {
 }
 
 func GetCourse() (Course, error) {
+	data, err := os.ReadFile("data/course.json")
+	if err != nil {
+		return Course{}, err
+	}
+
 	var course Course
-	err := json.Unmarshal(courseJSON, &course)
+	err = json.Unmarshal(data, &course)
 	if err != nil {
 		return Course{}, err
 	}
@@ -33,8 +32,13 @@ func GetCourse() (Course, error) {
 }
 
 func GetProjects() ([]Project, error) {
+	data, err := os.ReadFile("data/projects.json")
+	if err != nil {
+		return []Project{}, err
+	}
+
 	var projects []Project
-	err := json.Unmarshal(projectsJSON, &projects)
+	err = json.Unmarshal(data, &projects)
 	if err != nil {
 		return []Project{}, err
 	}
