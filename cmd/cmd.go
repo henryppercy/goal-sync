@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/henryppercy/goal-sync/goals"
 	"github.com/henryppercy/goal-sync/post"
 	"github.com/henryppercy/goal-sync/terminal"
@@ -39,13 +41,15 @@ func Execute() error {
 	s := terminal.Spanish(hours)
 	r := terminal.Reading(books, BOOK_LIMIT)
 
-	terminals := post.Terminals{
+	t := post.Terminals{
 		Programming: p,
 		Fitness:     f,
 		Spanish:     s,
 		Reading:     r,
 	}
 
+	fmt.Println(t.String())
+
 	filePath := "/path/to/2026-goals.md"
-	return post.Write(terminals, filePath)
+	return t.Write(filePath)
 }
