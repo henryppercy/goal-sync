@@ -1,11 +1,13 @@
 package goals
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"path/filepath"
 	"sort"
 	"strings"
+	"text/tabwriter"
 	"time"
 
 	"gopkg.in/yaml.v3"
@@ -58,6 +60,74 @@ func GetRead(length int) ([]Book, error) {
 
 	// TODO: filter return by those read in 2026
 	return books, nil
+}
+
+type ReadingProgress struct {
+	Books  []Book
+	Length int
+}
+
+func GetReading(length int) (ReadingProgress, error) {
+	books, err := GetRead(length)
+	if err != nil {
+		return ReadingProgress{}, err
+	}
+
+	return ReadingProgress{
+		Books:  books,
+		Length: length,
+	}, nil
+}
+
+func (r ReadingProgress) ToTerminal() string {
+	var completed int
+
+	for _, book := range r.Books {
+		if book.Date != "" {
+			completed++
+		}
+	}
+
+	command1 := "henry@2026:~/goals/reading $ wc -l books_completed.txt"
+	out1 := fmt.Sprintf("%d books_completed.txt", completed)
+	command2 := fmt.Sprintf("henry@2026:~/goals/reading $ tail -n %d reading_log.txt", r.Length)
+
+	logBooks := r.Books[len(r.Books)-r.Length:]
+
+	var buf bytes.Buffer
+
+	w := tabwriter.NewWriter(&buf, 0, 0, 2, ' ', 0)
+
+	for _, book := range logBooks {
+		createBookLogLine(w, &book)
+	}
+
+	w.Flush()
+
+	return fmt.Sprintf("%s\n%s\n\n%s\n%s", command1, out1, command2, buf.String())
+}
+
+func createBookLogLine(w *tabwriter.Writer, book *Book) {
+	status := "DONE"
+	date := book.Date
+
+	if book.Date == "" {
+		status = "OPEN"
+
+		now := time.Now()
+		date = now.Format("2006-01-02")
+	}
+
+	fmt.Fprintf(
+		w,
+		"[%s][%s]\t%s\t%s\t%s\t%s\n",
+		date,
+		status,
+		book.Title,
+		book.Authors[0],
+		book.DaysElapsed,
+		book.Rating,
+	)
 }
 
 func parseBookFile(filePath string) (Book, error) {

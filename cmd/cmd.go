@@ -5,47 +5,36 @@ import (
 
 	"github.com/henryppercy/goal-sync/goals"
 	"github.com/henryppercy/goal-sync/post"
-	"github.com/henryppercy/goal-sync/terminal"
 )
 
 const BOOK_LIMIT = 4
 
 func Execute() error {
-	course, err := goals.GetCourse()
+	programming, err := goals.GetProgramming()
 	if err != nil {
 		return err
 	}
 
-	projects, err := goals.GetProjects()
+	fitness, err := goals.GetWeeks()
 	if err != nil {
 		return err
 	}
 
-	weeks, err := goals.GetWeeks()
+	spanish, err := goals.GetSpanish()
 	if err != nil {
 		return err
 	}
 
-	hours, err := goals.GetHours()
+	reading, err := goals.GetReading(BOOK_LIMIT)
 	if err != nil {
 		return err
 	}
-
-	books, err := goals.GetRead(BOOK_LIMIT)
-	if err != nil {
-		return err
-	}
-
-	p := terminal.Programming(course, projects)
-	f := terminal.Fitness(weeks)
-	s := terminal.Spanish(hours)
-	r := terminal.Reading(books, BOOK_LIMIT)
 
 	t := post.Terminals{
-		Programming: p,
-		Fitness:     f,
-		Spanish:     s,
-		Reading:     r,
+		Programming: programming.ToTerminal(),
+		Fitness:     fitness.ToTerminal(),
+		Spanish:     spanish.ToTerminal(),
+		Reading:     reading.ToTerminal(),
 	}
 
 	fmt.Println(t.String())

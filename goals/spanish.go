@@ -3,9 +3,11 @@ package goals
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"os"
+	"strings"
 )
 
 const URL = "https://www.dreamingspanish.com/.netlify/functions/dayWatchedTime?language=es"
@@ -29,6 +31,43 @@ func GetHours() (int, error) {
 	}
 
 	return int(seconds / 3600), err
+}
+
+type SpanishProgress struct {
+	Hours int
+}
+
+func GetSpanish() (SpanishProgress, error) {
+	hours, err := GetHours()
+	if err != nil {
+		return SpanishProgress{}, err
+	}
+
+	return SpanishProgress{Hours: hours}, nil
+}
+
+func (s SpanishProgress) ToTerminal() string {
+	const goal = 1000
+	const barWidth = 40
+
+	bar := buildProgressBar(s.Hours, goal, barWidth)
+
+	percentage := s.Hours * 100 / goal
+
+	return fmt.Sprintf(
+		"henry@2026:~/goals/spanish $ ./progress.sh\n%s %d/%d hrs - %d%%",
+		bar,
+		s.Hours,
+		goal,
+		percentage,
+	)
+}
+
+func buildProgressBar(current, total, width int) string {
+	filled := (width * current) / total
+	empty := width - filled
+
+	return "[" + strings.Repeat("#", filled) + strings.Repeat(".", empty) + "]"
 }
 
 func getWatchLogs() ([]Log, error) {
