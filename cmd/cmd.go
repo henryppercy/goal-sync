@@ -6,6 +6,8 @@ import (
 	"github.com/henryppercy/goal-sync/terminal"
 )
 
+const BOOK_LIMIT = 4
+
 func Execute() error {
 	course, err := goals.GetCourse()
 	if err != nil {
@@ -27,7 +29,7 @@ func Execute() error {
 		return err
 	}
 
-	books, err := goals.GetRead()
+	books, err := goals.GetRead(BOOK_LIMIT)
 	if err != nil {
 		return err
 	}
@@ -35,7 +37,7 @@ func Execute() error {
 	p := terminal.Programming(course, projects)
 	f := terminal.Fitness(weeks)
 	s := terminal.Spanish(hours)
-	r := terminal.Reading(books)
+	r := terminal.Reading(books, BOOK_LIMIT)
 
 	terminals := post.Terminals{
 		Programming: p,

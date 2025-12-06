@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 	"time"
 
@@ -26,7 +27,7 @@ type bookFrontmatter struct {
 	Rating       int      `yaml:"rating"`
 }
 
-func GetRead() ([]Book, error) {
+func GetRead(length int) ([]Book, error) {
 	files, err := filepath.Glob("book/*.mdx")
 	if err != nil {
 		return []Book{}, err
@@ -42,6 +43,20 @@ func GetRead() ([]Book, error) {
 		books = append(books, book)
 	}
 
+	sort.Slice(books, func(i, j int) bool {
+		if books[i].Date == "" && books[j].Date == "" {
+			return false
+		}
+		if books[i].Date == "" {
+			return false
+		}
+		if books[j].Date == "" {
+			return true
+		}
+		return books[i].Date < books[j].Date
+	})
+
+	// TODO: filter return by those read in 2026
 	return books, nil
 }
 
@@ -63,9 +78,16 @@ func parseBookFile(filePath string) (Book, error) {
 	}
 
 	daysElapsed := ""
-	if fm.DateStarted != "" && fm.DateFinished != "" {
+	if fm.DateStarted != "" {
+		now := time.Now()
+		endDate := fm.DateFinished
+		if endDate == "" {
+			endDate = now.Format("2006-01-02")
+		}
+
 		started, err1 := time.Parse("2006-01-02", fm.DateStarted)
-		finished, err2 := time.Parse("2006-01-02", fm.DateFinished)
+		finished, err2 := time.Parse("2006-01-02", endDate)
+
 		if err1 == nil && err2 == nil {
 			days := int(finished.Sub(started).Hours() / 24)
 			daysElapsed = fmt.Sprintf("%dd", days)
@@ -73,9 +95,6 @@ func parseBookFile(filePath string) (Book, error) {
 	}
 
 	date := fm.DateFinished
-	if date == "" {
-		date = fm.DateStarted
-	}
 
 	rating := ""
 	if fm.Rating > 0 {
