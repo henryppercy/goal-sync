@@ -15,7 +15,7 @@ func (t Terminals) Write(filePath string) error {
 
 func (t Terminals) String() string {
 	return fmt.Sprintf(
-		"%s\n%s\n%s\n%s\n",
+		"%s\n%s\n\n%s\n\n%s\n",
 		t.Programming,
 		t.Fitness,
 		t.Spanish,
