@@ -13,7 +13,7 @@ func (t Terminals) Write(filePath string) error {
 	return nil
 }
 
-func (t Terminals) String() string{
+func (t Terminals) String() string {
 	return fmt.Sprintf(
 		"%s\n%s\n%s\n%s\n",
 		t.Programming,
