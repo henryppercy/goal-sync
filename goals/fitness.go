@@ -95,8 +95,8 @@ func createFitnessCalendarRow(w *tabwriter.Writer, row fitnessRow) {
 func (w FitnessWeeks) generateEntries() string {
 	var entries string
 
-	i := 0
-	for i < 52 {
+	i := 1
+	for i <= 52 {
 		if slices.Contains(w.Trained, i) {
 			entries += "•"
 			i++
