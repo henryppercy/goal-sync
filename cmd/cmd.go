@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/henryppercy/goal-sync/goals"
 	"github.com/henryppercy/goal-sync/post"
 )
@@ -37,8 +35,6 @@ func Execute() error {
 		Reading:     reading.ToTerminal(),
 	}
 
-	fmt.Println(t.String())
-
-	filePath := "/path/to/2026-goals.md"
+	filePath := "2026-goals.mdx"
 	return t.Write(filePath)
 }
