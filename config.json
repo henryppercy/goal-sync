@@ -1,0 +1,10 @@
+{
+    "paths": {
+        "course": "data/course.json",
+        "projects": "data/projects.json",
+        "fitness": "data/fitness.json",
+        "books": "book/*.mdx",
+        "post": "2026-goals.mdx"
+    },
+    "book_limit": 5
+}

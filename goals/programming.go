@@ -21,8 +21,8 @@ type Project struct {
 	Date string `json:"date"`
 }
 
-func GetCourse() (Course, error) {
-	data, err := os.ReadFile("data/course.json")
+func GetCourse(coursePath string) (Course, error) {
+	data, err := os.ReadFile(coursePath)
 	if err != nil {
 		return Course{}, err
 	}
@@ -36,7 +36,7 @@ func GetCourse() (Course, error) {
 	return course, nil
 }
 
-func GetProjects() ([]Project, error) {
+func GetProjects(projectPath string) ([]Project, error) {
 	data, err := os.ReadFile("data/projects.json")
 	if err != nil {
 		return []Project{}, err
@@ -56,13 +56,13 @@ type ProgrammingProgress struct {
 	Projects []Project
 }
 
-func GetProgramming() (ProgrammingProgress, error) {
-	course, err := GetCourse()
+func GetProgramming(coursePath, projectPath string) (ProgrammingProgress, error) {
+	course, err := GetCourse(coursePath)
 	if err != nil {
 		return ProgrammingProgress{}, err
 	}
 
-	projects, err := GetProjects()
+	projects, err := GetProjects(projectPath)
 	if err != nil {
 		return ProgrammingProgress{}, err
 	}

@@ -29,8 +29,8 @@ type bookFrontmatter struct {
 	Rating       int      `yaml:"rating"`
 }
 
-func GetRead(length int) ([]Book, error) {
-	files, err := filepath.Glob("book/*.mdx")
+func GetRead(path string, length int) ([]Book, error) {
+	files, err := filepath.Glob(path)
 	if err != nil {
 		return []Book{}, err
 	}
@@ -67,8 +67,8 @@ type ReadingProgress struct {
 	Length int
 }
 
-func GetReading(length int) (ReadingProgress, error) {
-	books, err := GetRead(length)
+func GetReading(path string, length int) (ReadingProgress, error) {
+	books, err := GetRead(path, length)
 	if err != nil {
 		return ReadingProgress{}, err
 	}

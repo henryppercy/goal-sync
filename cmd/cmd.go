@@ -1,19 +1,26 @@
 package cmd
 
 import (
+	"encoding/json"
 	"github.com/henryppercy/goal-sync/goals"
 	"github.com/henryppercy/goal-sync/post"
+	"os"
 )
 
 const BOOK_LIMIT = 4
 
 func Execute() error {
-	programming, err := goals.GetProgramming()
+	config, err := loadConfig()
 	if err != nil {
 		return err
 	}
 
-	fitness, err := goals.GetWeeks()
+	programming, err := goals.GetProgramming(config.Paths.Course, config.Paths.Projects)
+	if err != nil {
+		return err
+	}
+
+	fitness, err := goals.GetWeeks(config.Paths.Fitness)
 	if err != nil {
 		return err
 	}
@@ -23,7 +30,7 @@ func Execute() error {
 		return err
 	}
 
-	reading, err := goals.GetReading(BOOK_LIMIT)
+	reading, err := goals.GetReading(config.Paths.Books, config.BookLimit)
 	if err != nil {
 		return err
 	}
@@ -35,6 +42,33 @@ func Execute() error {
 		Reading:     reading.ToTerminal(),
 	}
 
-	filePath := "2026-goals.mdx"
-	return t.Write(filePath)
+	return t.Write(config.Paths.Post)
+}
+
+type Paths struct {
+	Course   string `json:"course"`
+	Projects string `json:"projects"`
+	Fitness  string `json:"fitness"`
+	Books    string `json:"books"`
+	Post     string `json:"post"`
+}
+
+type Config struct {
+	Paths     Paths `json:"paths"`
+	BookLimit int   `json:"book_limit"`
+}
+
+func loadConfig() (Config, error) {
+	data, err := os.ReadFile("config.json")
+	if err != nil {
+		return Config{}, err
+	}
+
+	var config Config
+	err = json.Unmarshal(data, &config)
+	if err != nil {
+		return Config{}, err
+	}
+
+	return config, nil
 }

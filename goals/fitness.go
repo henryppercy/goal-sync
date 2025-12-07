@@ -16,8 +16,8 @@ type FitnessWeeks struct {
 	Missed  []int `json:"missed"`
 }
 
-func GetWeeks() (FitnessWeeks, error) {
-	data, err := os.ReadFile("data/fitness.json")
+func GetWeeks(path string) (FitnessWeeks, error) {
+	data, err := os.ReadFile(path)
 	if err != nil {
 		return FitnessWeeks{}, err
 	}
