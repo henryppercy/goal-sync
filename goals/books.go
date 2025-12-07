@@ -104,6 +104,10 @@ func (r ReadingProgress) ToTerminal() string {
 	out1 := fmt.Sprintf("%d books_completed.txt", completed)
 	command2 := fmt.Sprintf("henry@2026:~/goals/reading $ tail -n %d reading_log.txt", r.Length)
 
+	if len(r.Books) < r.Length {
+		return fmt.Sprintf("%s\n%s", command1, out1)
+	}
+
 	logBooks := r.Books[len(r.Books)-r.Length:]
 
 	var buf bytes.Buffer
