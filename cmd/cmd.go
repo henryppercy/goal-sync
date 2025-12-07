@@ -2,9 +2,12 @@ package cmd
 
 import (
 	"encoding/json"
+	"fmt"
+	"os"
+	"path/filepath"
+
 	"github.com/henryppercy/goal-sync/goals"
 	"github.com/henryppercy/goal-sync/post"
-	"os"
 )
 
 const BOOK_LIMIT = 4
@@ -59,16 +62,20 @@ type Config struct {
 }
 
 func loadConfig() (Config, error) {
-	data, err := os.ReadFile("config.json")
-	if err != nil {
-		return Config{}, err
-	}
+    ex, err := os.Executable()
+    if err != nil {
+        return Config{}, err
+    }
+    exDir := filepath.Dir(ex)
 
-	var config Config
-	err = json.Unmarshal(data, &config)
-	if err != nil {
-		return Config{}, err
-	}
-
-	return config, nil
+    configPath := filepath.Join(exDir, "config.json")
+    
+    data, err := os.ReadFile(configPath)
+    if err != nil {
+        return Config{}, fmt.Errorf("config not found at %s: %w", configPath, err)
+    }
+    
+    var config Config
+    err = json.Unmarshal(data, &config)
+    return config, err
 }
