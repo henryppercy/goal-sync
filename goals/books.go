@@ -98,8 +98,8 @@ func (r ReadingProgress) ToTerminal() string {
 
 	w := tabwriter.NewWriter(&buf, 0, 0, 2, ' ', 0)
 
-	for _, book := range logBooks {
-		createBookLogLine(w, &book)
+	for i, book := range logBooks {
+		createBookLogLine(w, book, len(logBooks) == i+1)
 	}
 
 	w.Flush()
@@ -107,7 +107,7 @@ func (r ReadingProgress) ToTerminal() string {
 	return fmt.Sprintf("%s\n%s\n\n%s\n%s", command1, out1, command2, buf.String())
 }
 
-func createBookLogLine(w *tabwriter.Writer, book *Book) {
+func createBookLogLine(w *tabwriter.Writer, book Book, last bool) {
 	status := "DONE"
 	date := book.Date
 
@@ -118,15 +118,21 @@ func createBookLogLine(w *tabwriter.Writer, book *Book) {
 		date = now.Format("2006-01-02")
 	}
 
+	lastChar := "\n"
+	if last {
+		lastChar = ""
+	}
+
 	fmt.Fprintf(
 		w,
-		"[%s][%s]\t%s\t%s\t%s\t%s\n",
+		"[%s][%s]\t%s\t%s\t%s\t%s%s",
 		date,
 		status,
 		book.Title,
 		book.Authors[0],
 		book.DaysElapsed,
 		book.Rating,
+		lastChar,
 	)
 }
 

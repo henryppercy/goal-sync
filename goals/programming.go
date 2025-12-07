@@ -88,10 +88,9 @@ func (p ProgrammingProgress) ToTerminal() string {
 
 	w := tabwriter.NewWriter(&buf, 0, 0, 2, ' ', 0)
 
-	for _, project := range p.Projects {
-		err := createProjectLogLine(w, &project)
+	for i, project := range p.Projects {
+		err := createProjectLogLine(w, &project, len(p.Projects) == i+1)
 		if err != nil {
-			fmt.Println(err)
 			return ""
 		}
 	}
@@ -113,17 +112,23 @@ func (p ProgrammingProgress) ToTerminal() string {
 	)
 }
 
-func createProjectLogLine(w *tabwriter.Writer, project *Project) error {
+func createProjectLogLine(w *tabwriter.Writer, project *Project, last bool) error {
 	t, err := time.Parse(time.RFC3339, project.Date)
 	if err != nil {
 		return err
 	}
 
+	lastChar := "\n"
+	if last {
+		lastChar = ""
+	}
+
 	fmt.Fprintf(
 		w,
-		"drwxr-xr-x\t2\thenrypercy\tstaff\t64\t%s\t%s\n",
+		"drwxr-xr-x\t2\thenrypercy\tstaff\t64\t%s\t%s%s",
 		strings.Join((strings.Split(t.Format("2 Jan 15:04"), " ")), "\t"),
 		project.Name,
+		lastChar,
 	)
 
 	return nil
