@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
 	"os"
 	"path/filepath"
 
@@ -62,20 +62,25 @@ type Config struct {
 }
 
 func loadConfig() (Config, error) {
-    ex, err := os.Executable()
-    if err != nil {
-        return Config{}, err
-    }
-    exDir := filepath.Dir(ex)
+	if config, err := tryLoad("config.json");
+	err == nil {
+		return config, nil
+	}
 
-    configPath := filepath.Join(exDir, "config.json")
-    
-    data, err := os.ReadFile(configPath)
-    if err != nil {
-        return Config{}, fmt.Errorf("config not found at %s: %w", configPath, err)
-    }
-    
-    var config Config
-    err = json.Unmarshal(data, &config)
-    return config, err
+	ex, _ := os.Executable()
+	exePath := filepath.Join(filepath.Dir(ex), "config.json")
+	if config, err := tryLoad(exePath); err == nil {
+		return config, nil
+	}
+
+	return Config{}, errors.New("config.json not found")
+}
+
+func tryLoad(path string) (Config, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return Config{}, err
+	}
+	var config Config
+	return config, json.Unmarshal(data, &config)
 }
