@@ -3,7 +3,9 @@ package post
 import (
 	"fmt"
 	"os"
+	"regexp"
 	"strings"
+	"time"
 )
 
 type Terminals struct {
@@ -25,7 +27,15 @@ func (t Terminals) Write(fileName string) error {
 	newContent = replaceSection(newContent, "Spanish", t.Spanish)
 	newContent = replaceSection(newContent, "Reading", t.Reading)
 
+	newContent = updateTimeStamp(newContent)
+
 	return os.WriteFile(fileName, []byte(newContent), 0644)
+}
+
+func updateTimeStamp(content string) string {
+	currentDate := time.Now().Format("2006-01-02")
+	re := regexp.MustCompile(`(updatedAt:\s*")([^"]*)(")`)
+	return re.ReplaceAllString(content, "${1}"+currentDate+"${3}")
 }
 
 func replaceSection(content, title, terminal string) string {
