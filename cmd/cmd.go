@@ -10,8 +10,6 @@ import (
 	"github.com/henryppercy/goal-sync/post"
 )
 
-const BOOK_LIMIT = 4
-
 func Execute() error {
 	config, err := loadConfig()
 	if err != nil {
