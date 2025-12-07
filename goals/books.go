@@ -42,7 +42,20 @@ func GetRead(path string, length int) ([]Book, error) {
 		if err != nil {
 			continue
 		}
-		books = append(books, book)
+
+		if book.Date == "" {
+			books = append(books, book)
+			continue
+		}
+
+		t, err := time.Parse("2006-01-02", book.Date)
+		if err != nil {
+			return []Book{}, err
+		}
+
+		if t.Year() == 2026 {
+			books = append(books, book)
+		}
 	}
 
 	sort.Slice(books, func(i, j int) bool {
@@ -58,7 +71,6 @@ func GetRead(path string, length int) ([]Book, error) {
 		return books[i].Date < books[j].Date
 	})
 
-	// TODO: filter return by those read in 2026
 	return books, nil
 }
 
