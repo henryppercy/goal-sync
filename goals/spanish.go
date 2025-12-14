@@ -46,8 +46,7 @@ func GetSpanish() (SpanishProgress, error) {
 	return SpanishProgress{Hours: hours}, nil
 }
 
-func (s SpanishProgress) ToTerminal() string {
-	const goal = 1000
+func (s SpanishProgress) ToTerminal(goal int) string {
 	const barWidth = 40
 
 	bar := buildProgressBar(s.Hours, goal, barWidth)

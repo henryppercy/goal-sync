@@ -6,5 +6,6 @@
         "books": "book/*.mdx",
         "post": "2026-goals.mdx"
     },
-    "book_limit": 5
+    "book_limit": 5,
+    "hours": 800
 }

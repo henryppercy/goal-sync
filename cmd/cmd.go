@@ -39,7 +39,7 @@ func Execute() error {
 	t := post.Terminals{
 		Programming: programming.ToTerminal(),
 		Fitness:     fitness.ToTerminal(),
-		Spanish:     spanish.ToTerminal(),
+		Spanish:     spanish.ToTerminal(config.Hours),
 		Reading:     reading.ToTerminal(),
 	}
 
@@ -57,11 +57,11 @@ type Paths struct {
 type Config struct {
 	Paths     Paths `json:"paths"`
 	BookLimit int   `json:"book_limit"`
+	Hours     int   `json:"hours"`
 }
 
 func loadConfig() (Config, error) {
-	if config, err := tryLoad("config.json");
-	err == nil {
+	if config, err := tryLoad("config.json"); err == nil {
 		return config, nil
 	}
 
