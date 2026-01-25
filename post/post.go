@@ -34,7 +34,7 @@ func (t Terminals) Write(fileName string) error {
 
 func updateTimeStamp(content string) string {
 	currentDate := time.Now().Format("2006-01-02")
-	re := regexp.MustCompile(`(updatedAt:\s*")([^"]*)(")`)
+	re := regexp.MustCompile(`(updated_at:\s*")([^"]*)(")`)
 	return re.ReplaceAllString(content, "${1}"+currentDate+"${3}")
 }
 

@@ -182,7 +182,7 @@ func parseBookFile(filePath string) (Book, error) {
 		finished, err2 := time.Parse("2006-01-02", endDate)
 
 		if err1 == nil && err2 == nil {
-			days := int(finished.Sub(started).Hours() / 24)
+			days := int(finished.Sub(started).Hours() / 24) + 1
 			daysElapsed = fmt.Sprintf("%dd", days)
 		}
 	}
