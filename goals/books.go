@@ -15,18 +15,18 @@ import (
 
 type Book struct {
 	Title       string
-	Authors     []string
+	Author      string
 	Date        string
 	DaysElapsed string
 	Rating      string
 }
 
 type bookFrontmatter struct {
-	Title        string   `yaml:"title"`
-	Authors      []string `yaml:"authors"`
-	DateStarted  string   `yaml:"date_started"`
-	DateFinished string   `yaml:"date_finished"`
-	Rating       int      `yaml:"rating"`
+	Title        string `yaml:"title"`
+	Author       string `yaml:"author"`
+	DateStarted  string `yaml:"date_started"`
+	DateFinished string `yaml:"date_finished"`
+	Rating       float64 `yaml:"rating"`
 }
 
 func GetRead(path string, length int) ([]Book, error) {
@@ -146,7 +146,7 @@ func createBookLogLine(w *tabwriter.Writer, book Book, last bool) {
 		date,
 		status,
 		book.Title,
-		book.Authors[0],
+		book.Author,
 		book.DaysElapsed,
 		book.Rating,
 		lastChar,
@@ -191,14 +191,18 @@ func parseBookFile(filePath string) (Book, error) {
 
 	rating := ""
 	if fm.Rating > 0 {
-		rating = fmt.Sprintf("%d", fm.Rating)
+		if fm.Rating == float64(int(fm.Rating)) {
+			rating = fmt.Sprintf("%d", int(fm.Rating))
+		} else {
+			rating = fmt.Sprintf("%.1f", fm.Rating)
+		}
 	} else {
 		rating = "-"
 	}
 
 	return Book{
 		Title:       fm.Title,
-		Authors:     fm.Authors,
+		Author:      fm.Author,
 		Date:        date,
 		DaysElapsed: daysElapsed,
 		Rating:      rating,
