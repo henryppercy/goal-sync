@@ -113,7 +113,7 @@ func (p ProgrammingProgress) ToTerminal() string {
 }
 
 func createProjectLogLine(w *tabwriter.Writer, project *Project, last bool) error {
-	t, err := time.Parse(time.RFC3339, project.Date)
+	t, err := time.Parse("2006-01-02", project.Date)
 	if err != nil {
 		return err
 	}
@@ -126,7 +126,7 @@ func createProjectLogLine(w *tabwriter.Writer, project *Project, last bool) erro
 	fmt.Fprintf(
 		w,
 		"drwxr-xr-x\t2\thenrypercy\tstaff\t64\t%s\t%s%s",
-		strings.Join((strings.Split(t.Format("2 Jan 15:04"), " ")), "\t"),
+		strings.Join((strings.Split(t.Format("2 Jan"), " ")), "\t"),
 		project.Name,
 		lastChar,
 	)
